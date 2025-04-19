@@ -1,6 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import htmlcss from "../assets/html-css.jpg";
+import js from "../assets/js.png";
+import python from "../assets/python.png";
 const SubCourseList = () => {
   const { courseId, subCourseId } = useParams();
   const [subCourse, setSubCourse] = useState(null);
@@ -17,7 +19,7 @@ const SubCourseList = () => {
           description: "Master the fundamentals of web structure and styling",
           longDescription:
             "In this comprehensive module, you'll learn everything about HTML5 and CSS3 to build modern, responsive websites. Starting with basic document structure and moving to advanced layout techniques like Grid and Flexbox, you'll develop the core skills every web developer needs.",
-          image: "/api/placeholder/800/400",
+          image: htmlcss,
           duration: "3 weeks",
           topics: [
             "HTML5 Document Structure",
@@ -64,7 +66,7 @@ const SubCourseList = () => {
           description: "Learn the core programming language of the web",
           longDescription:
             "This module covers JavaScript from the ground up. You'll start with basic syntax and programming concepts, then progress to DOM manipulation, event handling, asynchronous programming, and modern ES6+ features. By the end, you'll be able to create interactive, dynamic web experiences.",
-          image: "/api/placeholder/800/400",
+          image: js,
           duration: "4 weeks",
           topics: [
             "JavaScript Syntax and Data Types",
@@ -113,7 +115,7 @@ const SubCourseList = () => {
             "Learn the primary programming language for data science",
           longDescription:
             "This module provides a comprehensive introduction to Python programming with a focus on data science applications. You'll learn syntax, data structures, functions, and libraries essential for data manipulation and analysis.",
-          image: "/api/placeholder/800/400",
+          image: python,
           duration: "4 weeks",
           topics: [
             "Python Syntax and Data Types",

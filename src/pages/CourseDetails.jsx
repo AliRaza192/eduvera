@@ -1,5 +1,11 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import course1 from "../assets/course1.jpg";
+import course2 from "../assets/course2.jpg";
+import course3 from "../assets/course3.jpg";
+import teacher1 from "../assets/teacher1.jpeg";
+import teacher2 from "../assets/teacher2.jpeg";
+import teacher3 from "../assets/teacher3.jpeg";
 
 const CourseDetails = () => {
   const { courseId } = useParams();
@@ -15,12 +21,12 @@ const CourseDetails = () => {
         description: "Learn modern web development techniques and frameworks",
         longDescription:
           "Our comprehensive Web Development course takes you from the basics of HTML and CSS to advanced concepts in modern JavaScript frameworks. You'll build real-world projects, learn to work with APIs, and understand both frontend and backend development.",
-        image: "/api/placeholder/800/400",
+        image: course1,
         duration: "12 weeks",
         level: "Beginner to Advanced",
         price: "$499",
         instructor: "Sarah Johnson",
-        instructorImage: "/api/placeholder/150/150",
+        instructorImage: teacher1,
         subCourses: [
           {
             id: "html-css",
@@ -50,12 +56,12 @@ const CourseDetails = () => {
         description: "Master data analysis, machine learning and statistics",
         longDescription:
           "Our Data Science program will give you the skills needed to analyze complex datasets and extract meaningful insights. Learn Python, statistics, machine learning algorithms, and data visualization techniques through hands-on projects using real-world data.",
-        image: "/api/placeholder/800/400",
+        image: course2,
         duration: "16 weeks",
         level: "Intermediate",
         price: "$699",
         instructor: "Dr. Michael Chen",
-        instructorImage: "/api/placeholder/150/150",
+        instructorImage: teacher2,
         subCourses: [
           {
             id: "python",
@@ -86,12 +92,12 @@ const CourseDetails = () => {
         description: "Build native and cross-platform mobile applications",
         longDescription:
           "Our Mobile Development course teaches you how to create engaging, high-performance mobile applications for iOS and Android. Learn both platform-specific development and cross-platform frameworks to maximize your skills and career opportunities.",
-        image: "/api/placeholder/800/400",
+        image: course3,
         duration: "14 weeks",
         level: "Intermediate",
         price: "$599",
         instructor: "James Wilson",
-        instructorImage: "/api/placeholder/150/150",
+        instructorImage: teacher3,
         subCourses: [
           {
             id: "android",
@@ -168,7 +174,7 @@ const CourseDetails = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto pt-12 px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
       <div className="flex flex-col lg:flex-row gap-8 mb-12">
         <div className="lg:w-1/2">
