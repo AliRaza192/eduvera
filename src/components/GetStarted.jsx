@@ -19,7 +19,7 @@ const GetStarted = () => {
               placeholder="Email" 
               className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
-            <button className="px-6 py-2 bg-purple-600 text-white font-medium rounded-full hover:bg-purple-700 transition-colors">
+            <button className="w-20 h-10 flex-shrink-0 bg-purple-600 text-white font-medium rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center">
               Sign Up
             </button>
           </div>
