@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import CourseList from "./pages/CourseList";
-import CourseDetails from "./pages/CourseDetails";
-import SubCourseList from "./pages/SubCourseList";
-import AboutUs from "./pages/AboutUs";
-import Contact from "./pages/Contact";
+import { Home, AboutUs, Contact } from "./pages";
+import { 
+  CourseList, 
+  CourseDetails, 
+  SubCourseList 
+} from "./components/courses";
 
 function App() {
   return (

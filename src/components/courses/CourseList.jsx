@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import course1 from "../assets/course1.jpg";
-import course2 from "../assets/course2.jpg";
-import course3 from "../assets/course3.jpg";
+import course1 from "../../assets/course1.jpg";
+import course2 from "../../assets/course2.jpg";
+import course3 from "../../assets/course3.jpg";
 const CourseList = () => {
   // In a real app, you'd fetch this from your backend
   const [courses, setCourses] = useState([
