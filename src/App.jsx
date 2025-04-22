@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { Home, AboutUs, Contact } from "./pages";
+import { Home, AboutUs, Contact, Login, SignUp } from "./pages";
 import { CourseList, CourseDetails, SubCourseList } from "./components/courses";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
           />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </div>
     </Router>

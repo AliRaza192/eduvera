@@ -221,73 +221,7 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* FAQ Section */}
-      <div className="py-16 bg-purple-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">Frequently Asked Questions</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Find quick answers to common questions about our platform and services.
-            </p>
-          </div>
-          
-          <div className="max-w-4xl mx-auto">
-            <div className="grid gap-6">
-              {/* FAQ Item 1 */}
-              <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    How quickly can I expect a response to my inquiry?
-                  </h3>
-                  <p className="text-gray-600">
-                    We strive to respond to all inquiries within 24 hours during business days. 
-                    For urgent matters, please call our support line for immediate assistance.
-                  </p>
-                </div>
-              </div>
-              
-              {/* FAQ Item 2 */}
-              <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    Do you offer technical support outside of business hours?
-                  </h3>
-                  <p className="text-gray-600">
-                    Yes, our technical support team is available 24/7 for urgent platform issues. 
-                    For non-urgent matters, you can submit a ticket and we'll respond during business hours.
-                  </p>
-                </div>
-              </div>
-              
-              {/* FAQ Item 3 */}
-              <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    How can I request a refund for a course purchase?
-                  </h3>
-                  <p className="text-gray-600">
-                    Refund requests can be submitted through your account dashboard within 14 days of purchase. 
-                    Please include your order number and reason for the refund request.
-                  </p>
-                </div>
-              </div>
-              
-              {/* FAQ Item 4 */}
-              <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    Do you offer corporate or educational institution partnerships?
-                  </h3>
-                  <p className="text-gray-600">
-                    Yes, we have dedicated partnership programs for businesses and educational institutions. 
-                    Please contact our partnerships team at partnerships@learningplatform.com for more information.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* CTA Section */}
       <div className="py-16 container mx-auto px-4">

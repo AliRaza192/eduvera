@@ -127,7 +127,7 @@ const AboutUs = () => {
       <div className="py-16 container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Meet Our Leadership Team
+            Instructor
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Our diverse team of education experts, technologists, and industry

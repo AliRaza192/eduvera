@@ -1,6 +1,6 @@
 import { ChevronDown, Menu, X, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,8 +30,8 @@ const Navbar = () => {
         { id: "html-css", name: "HTML & CSS" },
         { id: "javascript", name: "JavaScript" },
         { id: "react", name: "React" },
-        { id: "nodejs", name: "Node.js" }
-      ]
+        { id: "nodejs", name: "Node.js" },
+      ],
     },
     {
       id: "data-science",
@@ -40,8 +40,8 @@ const Navbar = () => {
         { id: "python", name: "Python" },
         { id: "machine-learning", name: "Machine Learning" },
         { id: "data-analysis", name: "Data Analysis" },
-        { id: "statistics", name: "Statistics" }
-      ]
+        { id: "statistics", name: "Statistics" },
+      ],
     },
     {
       id: "mobile-development",
@@ -50,9 +50,9 @@ const Navbar = () => {
         { id: "android", name: "Android" },
         { id: "ios", name: "iOS" },
         { id: "react-native", name: "React Native" },
-        { id: "flutter", name: "Flutter" }
-      ]
-    }
+        { id: "flutter", name: "Flutter" },
+      ],
+    },
   ];
 
   return (
@@ -83,7 +83,7 @@ const Navbar = () => {
             <ul className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-md w-48 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 z-10">
               {courseData.map((course, index) => (
                 <li key={index} className="relative group/course">
-                  <Link 
+                  <Link
                     to={`/courses/${course.id}`}
                     className="flex justify-between items-center px-4 py-2 hover:bg-gray-100 hover:text-purple-700"
                   >
@@ -93,7 +93,7 @@ const Navbar = () => {
                   <ul className="absolute left-full top-0 bg-white shadow-lg rounded-md w-48 opacity-0 invisible group-hover/course:opacity-100 group-hover/course:visible transition-all duration-200">
                     {course.subItems.map((subItem, subIndex) => (
                       <li key={subIndex}>
-                        <Link 
+                        <Link
                           to={`/courses/${course.id}/${subItem.id}`}
                           className="block px-4 py-2 hover:bg-gray-100 hover:text-purple-700"
                         >
@@ -105,8 +105,8 @@ const Navbar = () => {
                 </li>
               ))}
               <li>
-                <Link 
-                  to="/courses" 
+                <Link
+                  to="/courses"
                   className="block px-4 py-2 hover:bg-gray-100 hover:text-purple-700"
                 >
                   All Courses
@@ -132,35 +132,19 @@ const Navbar = () => {
             </div>
             <ul className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-md w-48 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200">
               <li>
-                <Link 
-                  to="/career-faq" 
+                <Link
+                  to="/testimonial"
                   className="block px-4 py-2 hover:bg-gray-100 hover:text-purple-700"
                 >
-                  Career FAQ
+                  Tutorials
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/teacher" 
+                <Link
+                  to="/blog"
                   className="block px-4 py-2 hover:bg-gray-100 hover:text-purple-700"
                 >
-                  Teacher
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/testimonial" 
-                  className="block px-4 py-2 hover:bg-gray-100 hover:text-purple-700"
-                >
-                  Testimonial
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/blog" 
-                  className="block px-4 py-2 hover:bg-gray-100 hover:text-purple-700"
-                >
-                  Blog Single Page
+                  Blogs
                 </Link>
               </li>
             </ul>
@@ -174,7 +158,7 @@ const Navbar = () => {
 
           {/* Buttons */}
           <div className="hidden md:flex space-x-4 ml-4">
-            <Link 
+            <Link
               to="/login"
               className="bg-white text-purple-700 px-4 py-2 rounded-full hover:bg-purple-100 border transition"
             >
@@ -207,8 +191,8 @@ const Navbar = () => {
       >
         <ul className="flex flex-col space-y-2 text-gray-800 font-medium mt-2">
           <li>
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="block hover:text-purple-700 transition py-1"
               onClick={closeMenus}
             >
@@ -217,7 +201,7 @@ const Navbar = () => {
           </li>
 
           <li className="cursor-pointer">
-            <div 
+            <div
               className="flex justify-between items-center hover:text-purple-700 transition"
               onClick={() => toggleDropdown("course")}
             >
@@ -233,14 +217,14 @@ const Navbar = () => {
               <ul className="ml-4 mt-1 space-y-1 text-sm">
                 {courseData.map((course, index) => (
                   <li key={index}>
-                    <div 
+                    <div
                       className="flex justify-between items-center hover:text-purple-700 transition pl-2 py-1"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleMobileSubDropdown(course.name);
                       }}
                     >
-                      <Link 
+                      <Link
                         to={`/courses/${course.id}`}
                         className="block flex-grow"
                         onClick={closeMenus}
@@ -250,7 +234,9 @@ const Navbar = () => {
                       <ChevronDown
                         size={14}
                         className={`transition-transform duration-200 ${
-                          openMobileSubDropdown === course.name ? "rotate-180" : ""
+                          openMobileSubDropdown === course.name
+                            ? "rotate-180"
+                            : ""
                         }`}
                       />
                     </div>
@@ -285,8 +271,8 @@ const Navbar = () => {
           </li>
 
           <li>
-            <Link 
-              to="/about" 
+            <Link
+              to="/about"
               className="block hover:text-purple-700 transition py-1"
               onClick={closeMenus}
             >
@@ -295,7 +281,7 @@ const Navbar = () => {
           </li>
 
           <li className="cursor-pointer">
-            <div 
+            <div
               className="flex justify-between items-center hover:text-purple-700 transition"
               onClick={() => toggleDropdown("pages")}
             >
@@ -350,8 +336,8 @@ const Navbar = () => {
           </li>
 
           <li>
-            <Link 
-              to="/contact" 
+            <Link
+              to="/contact"
               className="block hover:text-purple-700 transition py-1"
               onClick={closeMenus}
             >
