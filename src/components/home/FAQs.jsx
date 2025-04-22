@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import faqsImg from "../assets/faqs.jpeg";
+import faqsImg from "../../assets/faqs.jpeg";
 
 const FAQs = () => {
   const [openFaq, setOpenFaq] = useState(0);

@@ -1,11 +1,11 @@
-import featureCourse1 from "../assets/feauteCourse1.jpeg";
-import featureCourse2 from "../assets/feauteCourse2.jpeg";
-import featureCourse3 from "../assets/feauteCourse3.jpeg";
-import featureCourse4 from "../assets/feauteCourse4.jpeg";
-import person1 from "../assets/person1.jpeg";
-import person2 from "../assets/person2.jpeg";
-import person3 from "../assets/person3.jpeg";
-import person4 from "../assets/person4.jpeg";
+import featureCourse1 from "../../assets/feauteCourse1.jpeg";
+import featureCourse2 from "../../assets/feauteCourse2.jpeg";
+import featureCourse3 from "../../assets/feauteCourse3.jpeg";
+import featureCourse4 from "../../assets/feauteCourse4.jpeg";
+import person1 from "../../assets/person1.jpeg";
+import person2 from "../../assets/person2.jpeg";
+import person3 from "../../assets/person3.jpeg";
+import person4 from "../../assets/person4.jpeg";
 
 const FeaturedCourses = () => {
   const courses = [

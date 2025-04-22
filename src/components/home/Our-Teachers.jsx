@@ -1,9 +1,9 @@
 import React from 'react';
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
-import teacher1 from "../assets/teacher1.jpeg";
-import teacher2 from "../assets/teacher2.jpeg";
-import teacher3 from "../assets/teacher3.jpeg";
-import teacher4 from "../assets/teacher4.jpeg";
+import teacher1 from "../../assets/teacher1.jpeg";
+import teacher2 from "../../assets/teacher2.jpeg";
+import teacher3 from "../../assets/teacher3.jpeg";
+import teacher4 from "../../assets/teacher4.jpeg";
 
 
 const OurTeachersSection = () => {

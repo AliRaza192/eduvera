@@ -1,5 +1,4 @@
-import about from "../assets/about-img.jpeg";
-import FeaturedCourses from "../components/Featured-Courses";
+import about from "../../assets/about-img.jpeg";
 
 const AboutUs = () => {
   const features = [

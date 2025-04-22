@@ -1,5 +1,5 @@
-import image1 from "../assets/01-hero-img.jpeg";
-import image2 from "../assets/02-hero-img.jpeg";
+import image1 from "../../assets/01-hero-img.jpeg";
+import image2 from "../../assets/02-hero-img.jpeg";
 
 const HeroSection = () => {
   return (

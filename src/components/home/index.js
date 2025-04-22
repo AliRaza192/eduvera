@@ -1,0 +1,10 @@
+export { default as HeroSection } from './HeroSection';
+export { default as Partners } from './Partners';
+export { default as AboutUs } from './AboutUs';
+export { default as FeaturedCourses } from './Featured-Courses';
+export { default as WhyChooseUs } from './Why-ChooseUs';
+export { default as GetStarted } from './GetStarted';
+export { default as OurTeachers } from './Our-Teachers';
+export { default as Pricing } from './Pricing-Plan';
+export { default as Testimonials } from './Testimonials';
+export { default as FAQs } from './FAQs';
