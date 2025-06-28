@@ -7,17 +7,25 @@ import {
 import Navbar from "./components/Navbar";
 import { Home, AboutUs, Contact, Login, SignUp } from "./pages";
 import { CourseList, CourseDetails, SubCourseList } from "./components/courses";
-import AuthProvider from "./context/AuthContext";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import ResetPassword from "./components/auth/ResetPassword";
-
-import useAuth from "./hooks/useAuth";
 import OTPVerification from "./components/auth/OTPVerification";
+import AuthProvider from "./context/AuthContext";
+import EmailVerified from "./pages/Auth/EmailVerified";
+import VerifyEmail from "./pages/Auth/VerifyEmail";
+import useAuth from "./hooks/useAuth";
+import { Toaster } from "react-hot-toast";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg font-semibold">Loading...</p>
+      </div>
+    );
+
   if (!user) return <Navigate to="/login" />;
   return children;
 };
@@ -25,10 +33,13 @@ const PrivateRoute = ({ children }) => {
 function App() {
   return (
     <Router>
+      <Toaster position="top-center" />
+
       <AuthProvider>
         <Navbar />
-        <div className="pt-20 pb-10">
+        <div className="pt-20 pb-10 min-h-screen bg-gray-50">
           <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<CourseList />} />
             <Route path="/courses/:courseId" element={<CourseDetails />} />
@@ -40,8 +51,14 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/email-verified" element={<EmailVerified />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
 
-            {/* Example Protected Route */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/otp-verification" element={<OTPVerification />} />
+
+            {/* Protected Routes */}
             <Route
               path="/dashboard"
               element={
@@ -52,10 +69,6 @@ function App() {
                 </PrivateRoute>
               }
             />
-
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="otp-verification" element={<OTPVerification />} />
           </Routes>
         </div>
       </AuthProvider>

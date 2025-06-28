@@ -1,73 +1,58 @@
-import React, { useState } from "react";
-import { FaLock, FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
+import { useState } from "react";
 import { login } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { handleLogin } = useAuth();
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await login(formData);
-      handleLogin(res.data.token); // Ye context ko bhi update karega
-      alert("Login successful");
-      navigate("/dashboard");
-    } catch (error) {
-      alert(error.response?.data?.message || "Login failed");
+      localStorage.setItem("token", res.data.token);
+      toast.success("Login Successful!");
+      navigate("/my-courses");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Login Failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <div>
-        <label className="block mb-1">Email</label>
-        <div className="relative">
-          <FaEnvelope className="absolute left-3 top-3 text-gray-400" />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full pl-10 pr-4 py-3 border rounded-md"
-            required
-          />
-        </div>
-      </div>
-      <div>
-        <label className="block mb-1">Password</label>
-        <div className="relative">
-          <FaLock className="absolute left-3 top-3 text-gray-400" />
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full pl-10 pr-10 py-3 border rounded-md"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-3 text-gray-400"
-          >
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
-          </button>
-        </div>
-      </div>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4 p-6 bg-white shadow-xl rounded-xl">
+      <h2 className="text-2xl font-bold text-center">Login to LMS</h2>
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        className="w-full p-3 border rounded"
+        value={formData.email}
+        onChange={handleChange}
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        className="w-full p-3 border rounded"
+        value={formData.password}
+        onChange={handleChange}
+        required
+      />
       <button
         type="submit"
-        className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-md"
+        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        disabled={loading}
       >
-        Log In
+        {loading ? "Logging in..." : "Login"}
       </button>
     </form>
   );

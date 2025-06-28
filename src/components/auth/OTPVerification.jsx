@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { otpVerification } from "../../services/authService";
 import { useLocation, useNavigate } from "react-router-dom";
+import { verifyOtp, resendVerification } from "../../services/authService";
+import toast from "react-hot-toast";
 
 const OTPVerification = () => {
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email;
@@ -12,34 +14,64 @@ const OTPVerification = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await otpVerification({ email, otp });
-      console.log("OTP Response =>", res.data);
-      const resetToken = res.data.reset_token;
-      navigate("/reset-password", { state: { reset_token: resetToken, email } });
+      await verifyOtp({ email, otp });
+      toast.success("Email verified successfully!");
+      navigate("/email-verified");
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid OTP");
+      toast.error(err.response?.data?.message || "Verification failed.");
+    }
+  };
+
+  const handleResend = async () => {
+    setResending(true);
+    try {
+      await resendVerification({ email });
+      toast.success("OTP has been resent to your email.");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to resend OTP.");
+    } finally {
+      setResending(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4 text-center">Verify OTP</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded shadow-md space-y-4 w-full max-w-md"
+      >
+        <h2 className="text-xl font-semibold text-center">Verify Your Email</h2>
+        <p className="text-center text-gray-600 mb-2">
+          Enter the OTP sent to your email: {email}
+        </p>
         <input
           type="text"
-          placeholder="Enter OTP"
+          name="otp"
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
+          placeholder="Enter OTP"
+          className="w-full border p-2 rounded"
           required
-          className="w-full border px-3 py-2 rounded"
         />
         <button
           type="submit"
-          className="w-full bg-purple-600 text-white py-2 rounded"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          disabled={loading}
         >
-          Verify
+          {loading ? "Verifying..." : "Verify OTP"}
         </button>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-600">Didn't receive the OTP?</p>
+          <button
+            type="button"
+            onClick={handleResend}
+            className="text-blue-600 hover:underline text-sm mt-1"
+            disabled={resending}
+          >
+            {resending ? "Resending..." : "Resend OTP"}
+          </button>
+        </div>
       </form>
     </div>
   );

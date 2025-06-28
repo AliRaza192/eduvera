@@ -1,151 +1,96 @@
-import React, { useState } from "react";
-import { FaUser, FaLock, FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
-import { signup } from "../../services/authService";
+import { useState } from "react";
+import { signUp } from "../../services/authService";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
+    confirm_password: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+    setLoading(true);
     try {
-      await signup({
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        password: formData.password,
-        confirm_password: formData.confirmPassword,
-      });
-      alert("Account created successfully");
-      navigate("/login");
+      const res = await signUp(formData);
+      toast.success("Account created. Verify your email.");
+      navigate("/otp-verification", { state: { email: formData.email } });
     } catch (error) {
-      alert(error.response?.data?.message || "Sign up failed");
+      toast.error(error.response?.data?.message || "Signup failed.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-1">First Name</label>
-          <div className="relative">
-            <FaUser className="absolute left-3 top-3 text-gray-400" />
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              className="w-full pl-10 pr-4 py-3 border rounded-md"
-              required
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block mb-1">Last Name</label>
-          <div className="relative">
-            <FaUser className="absolute left-3 top-3 text-gray-400" />
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              className="w-full pl-10 pr-4 py-3 border rounded-md"
-              required
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <label className="block mb-1">Email</label>
-        <div className="relative">
-          <FaEnvelope className="absolute left-3 top-3 text-gray-400" />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full pl-10 pr-4 py-3 border rounded-md"
-            required
-          />
-        </div>
-      </div>
-      <div>
-        <label className="block mb-1">Phone Number</label>
+    <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-xl shadow-xl space-y-4">
+      <h2 className="text-2xl font-bold text-center">Create an Account</h2>
+      <div className="flex gap-2">
         <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
+          type="text"
+          name="first_name"
+          placeholder="First Name"
+          className="w-1/2 border p-2 rounded"
           onChange={handleChange}
-          className="w-full py-3 px-3 border rounded-md"
+          required
+        />
+        <input
+          type="text"
+          name="last_name"
+          placeholder="Last Name"
+          className="w-1/2 border p-2 rounded"
+          onChange={handleChange}
           required
         />
       </div>
-      <div>
-        <label className="block mb-1">Password</label>
-        <div className="relative">
-          <FaLock className="absolute left-3 top-3 text-gray-400" />
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full pl-10 pr-10 py-3 border rounded-md"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-3 text-gray-400"
-          >
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
-          </button>
-        </div>
-      </div>
-      <div>
-        <label className="block mb-1">Confirm Password</label>
-        <div className="relative">
-          <FaLock className="absolute left-3 top-3 text-gray-400" />
-          <input
-            type={showConfirmPassword ? "text" : "password"}
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="w-full pl-10 pr-10 py-3 border rounded-md"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-3 text-gray-400"
-          >
-            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-          </button>
-        </div>
-      </div>
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        className="w-full border p-2 rounded"
+        onChange={handleChange}
+        required
+      />
+      <input
+        type="text"
+        name="phone"
+        placeholder="Phone"
+        className="w-full border p-2 rounded"
+        onChange={handleChange}
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        className="w-full border p-2 rounded"
+        onChange={handleChange}
+        required
+      />
+      <input
+        type="password"
+        name="confirm_password"
+        placeholder="Confirm Password"
+        className="w-full border p-2 rounded"
+        onChange={handleChange}
+        required
+      />
       <button
         type="submit"
-        className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-md"
+        className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+        disabled={loading}
       >
-        Create Account
+        {loading ? "Creating..." : "Sign Up"}
       </button>
     </form>
   );
