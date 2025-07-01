@@ -42,32 +42,30 @@ const SignUpForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!validateForm()) return;
 
-    setLoading(true);
-    try {
-      await signUp(formData);
-      toast.success("Account created. Please verify your email.");
-      const emailCopy = formData.email; // Email ko pehle save kar lo
-      setFormData({
-        first_name: "",
-        last_name: "",
-        email: "",
-        phone: "",
-        password: "",
-        confirm_password: ""
-      });
-      setTimeout(() => {
-        navigate("/verify-email", { state: { email: emailCopy } });
-      }, 1000);
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Signup failed.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  try {
+    await signUp(formData);
+    toast.success("Account created. Please verify your email.");
+    navigate("/verify-email", { state: { email: formData.email } });
+    setFormData({
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirm_password: ""
+    });
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Signup failed.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
