@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://lms.clickoptimizer.net",
+  baseURL: " ",
 });
 
 export default instance;
