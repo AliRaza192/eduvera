@@ -1,25 +1,19 @@
-import axios from "./api";
+import instance from "./api";
 
-export const signUp = (data) => axios.post("/api/sign-up", data);
-export const login = (data) => axios.post("/api/login", data);
-export const verifyOtp = (data) => axios.post("/api/otp-verification", data);
-export const verifyEmailDirect = (token) => axios.post("/api/email/verify", { token });
-export const resendVerification = (data) =>
-  axios.post("/api/resend-verification-link", data);
-export const forgetPassword = (data) =>
-  axios.post("/api/forget-password", data);
-export const resetPassword = (data) => axios.post("/api/reset-password", data);
+export const signUp = (data) => instance.post("sign-up", data);
+export const login = (data) => instance.post("login", data);
+export const verifyOtp = (data) => instance.post("otp-verification", data);
+export const verifyEmailDirect = (token) => instance.post("email/verify", { token });
+export const resendVerification = (data) => instance.post("resend-verification-link", data);
+export const forgetPassword = (data) => instance.post("forget-password", data);
+export const resetPassword = (data) => instance.post("reset-password", data);
 export const changePassword = (data, token) =>
-  axios.post("/api/change-password", data, {
+  instance.post("change-password", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 export const changeEmail = (data, token) =>
-  axios.post("/api/email/change", data, {
+  instance.post("email/change", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 export const logout = (token) =>
-  axios.post(
-    "/api/logout",
-    {},
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  instance.post("logout", {}, { headers: { Authorization: `Bearer ${token}` } });
