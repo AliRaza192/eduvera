@@ -42,18 +42,18 @@ const LoginForm = () => {
     setLoading(true);
     try {
       const res = await login(formData);
+
+      const status = res.data?.status;
       const user = res.data?.data?.user;
       const token = res.data?.data?.access_token;
 
-      if (!user) {
-        toast.error("Invalid response from server");
+      if (status === "Email Not Verified" || status === "unverified") {
+        toast.error("Please verify your email first.");
+        navigate("/verification", { state: { email: formData.email } });
         return;
       }
 
-      if (!user.email_verified_at) {
-        toast.error("Please verify your email first.");
-        navigate("/verification", { state: { email: formData.email } });
-      } else if (token) {
+      if (user && token) {
         handleLogin(token);
         toast.success("Logged in successfully!");
         navigate("/dashboard");
@@ -80,12 +80,16 @@ const LoginForm = () => {
           <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
             Login to Your Account
           </h2>
-          <p className="text-gray-600 text-lg">Welcome back! Please enter your details.</p>
+          <p className="text-gray-600 text-lg">
+            Welcome back! Please enter your details.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
           <div className="group">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Email Address
+            </label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
@@ -94,7 +98,9 @@ const LoginForm = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className={`w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all bg-white/50 backdrop-blur-sm ${
-                  errors.email ? "border-red-400 bg-red-50/50" : "border-gray-200 hover:border-gray-300"
+                  errors.email
+                    ? "border-red-400 bg-red-50/50"
+                    : "border-gray-200 hover:border-gray-300"
                 }`}
                 placeholder="Enter your email"
                 disabled={loading}
@@ -109,7 +115,9 @@ const LoginForm = () => {
           </div>
 
           <div className="group">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Password
+            </label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
@@ -118,7 +126,9 @@ const LoginForm = () => {
                 value={formData.password}
                 onChange={handleChange}
                 className={`w-full pl-12 pr-14 py-4 border-2 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all bg-white/50 backdrop-blur-sm ${
-                  errors.password ? "border-red-400 bg-red-50/50" : "border-gray-200 hover:border-gray-300"
+                  errors.password
+                    ? "border-red-400 bg-red-50/50"
+                    : "border-gray-200 hover:border-gray-300"
                 }`}
                 placeholder="Enter your password"
                 disabled={loading}
@@ -129,7 +139,11 @@ const LoginForm = () => {
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-500 p-1"
                 disabled={loading}
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
             {errors.password && (
