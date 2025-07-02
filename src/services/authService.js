@@ -3,7 +3,7 @@ import instance from "./api";
 export const signUp = (data) => instance.post("sign-up", data);
 export const login = (data) => instance.post("login", data);
 export const verifyOtp = (data) => instance.post("otp-verification", data);
-export const verifyEmailDirect = (token) => instance.post("email-verify", { token });
+export const verifyEmailDirect = (token) => instance.post("verify-email", { token });
 export const resendVerification = (data) => instance.post("resend-verification-link", data);
 export const forgetPassword = (data) => instance.post("forget-password", data);
 export const resetPassword = (data) => instance.post("reset-password", data);
