@@ -265,7 +265,7 @@ const SignUpForm = () => {
       await signUp(formData);
       toast.success("Account created. Please verify your email.");
       console.log("Navigating to verify email page...");
-      navigate("/resend-verification", { state: { email: formData.email } });
+      navigate("/verification", { state: { email: formData.email } });
       setFormData({
         first_name: "",
         last_name: "",
