@@ -70,9 +70,12 @@ const LoginForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 w-full max-w-lg p-8 relative overflow-hidden">
+        
+        {/* Decorative Background Circles */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-200/30 to-blue-200/30 rounded-full -translate-y-16 translate-x-16"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-indigo-200/30 to-purple-200/30 rounded-full translate-y-12 -translate-x-12"></div>
 
+        {/* Heading */}
         <div className="text-center mb-8 relative z-10">
           <div className="bg-gradient-to-r from-purple-500 to-indigo-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
             <Lock className="w-10 h-10 text-white" />
@@ -86,6 +89,8 @@ const LoginForm = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+          
+          {/* Email */}
           <div className="group">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Email Address
@@ -114,6 +119,7 @@ const LoginForm = () => {
             )}
           </div>
 
+          {/* Password */}
           <div className="group">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Password
@@ -154,6 +160,19 @@ const LoginForm = () => {
             )}
           </div>
 
+          {/* Forget Password Button */}
+          <div className="flex justify-end mb-2">
+            <button
+              type="button"
+              onClick={() => navigate("/forgot-password")}
+              className="text-purple-600 hover:text-purple-700 text-sm font-medium"
+              disabled={loading}
+            >
+              Forgot Password?
+            </button>
+          </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -172,6 +191,7 @@ const LoginForm = () => {
             )}
           </button>
 
+          {/* Sign Up Link */}
           <div className="text-center mt-6">
             <p className="text-gray-600">
               Don't have an account?{" "}
