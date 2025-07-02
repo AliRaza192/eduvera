@@ -55,7 +55,9 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/email-verified" element={<EmailVerified />} />
             <Route path="/verification" element={<EmailVerification />} />
-            <Route path="/verify-email/:token" element={<EmailVerificationHandler />} /> {/* Add this route */}
+            <Route path="/verify-email" element={<EmailVerificationHandler />} />
+
+            {/* <Route path="/verify-email/:token" element={<EmailVerificationHandler />} /> Add this route */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/otp-verification" element={<OTPVerification />} />
