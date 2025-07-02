@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { login } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import useAuth from "../../hooks/useAuth";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const { handleLogin } = useAuth();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -39,13 +42,20 @@ const LoginForm = () => {
     setLoading(true);
     try {
       const res = await login(formData);
+      const user = res.data?.data?.user;
+      const token = res.data?.data?.access_token;
 
-      if (res.data?.status === "unverified") {
+      if (!user) {
+        toast.error("Invalid response from server");
+        return;
+      }
+
+      if (!user.email_verified_at) {
         toast.error("Please verify your email first.");
         navigate("/verification", { state: { email: formData.email } });
-      } else if (res.data?.token) {
+      } else if (token) {
+        handleLogin(token);
         toast.success("Logged in successfully!");
-        localStorage.setItem("auth_token", res.data.token);
         navigate("/dashboard");
       } else {
         toast.error(res.data?.message || "Login failed.");
@@ -60,14 +70,11 @@ const LoginForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 w-full max-w-lg p-8 relative overflow-hidden">
-        
-        {/* Background Pattern */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-200/30 to-blue-200/30 rounded-full -translate-y-16 translate-x-16"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-indigo-200/30 to-purple-200/30 rounded-full translate-y-12 -translate-x-12"></div>
-        
-        {/* Header */}
+
         <div className="text-center mb-8 relative z-10">
-          <div className="bg-gradient-to-r from-purple-500 to-indigo-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300">
+          <div className="bg-gradient-to-r from-purple-500 to-indigo-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
             <Lock className="w-10 h-10 text-white" />
           </div>
           <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
@@ -77,7 +84,6 @@ const LoginForm = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-          {/* Email */}
           <div className="group">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
             <div className="relative">
@@ -87,7 +93,7 @@ const LoginForm = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm ${
+                className={`w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all bg-white/50 backdrop-blur-sm ${
                   errors.email ? "border-red-400 bg-red-50/50" : "border-gray-200 hover:border-gray-300"
                 }`}
                 placeholder="Enter your email"
@@ -102,7 +108,6 @@ const LoginForm = () => {
             )}
           </div>
 
-          {/* Password */}
           <div className="group">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
             <div className="relative">
@@ -112,7 +117,7 @@ const LoginForm = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full pl-12 pr-14 py-4 border-2 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm ${
+                className={`w-full pl-12 pr-14 py-4 border-2 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all bg-white/50 backdrop-blur-sm ${
                   errors.password ? "border-red-400 bg-red-50/50" : "border-gray-200 hover:border-gray-300"
                 }`}
                 placeholder="Enter your password"
@@ -121,7 +126,7 @@ const LoginForm = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-500 transition-colors p-1"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-500 p-1"
                 disabled={loading}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -135,11 +140,10 @@ const LoginForm = () => {
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
+            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-6 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
           >
             {loading ? (
               <>
@@ -149,19 +153,18 @@ const LoginForm = () => {
             ) : (
               <>
                 <span className="text-lg">Login</span>
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-6 h-6" />
               </>
             )}
           </button>
 
-          {/* Sign Up Link */}
           <div className="text-center mt-6">
             <p className="text-gray-600">
               Don't have an account?{" "}
-              <button 
+              <button
                 type="button"
                 onClick={() => navigate("/signup")}
-                className="text-purple-600 hover:text-purple-700 font-semibold transition-colors"
+                className="text-purple-600 hover:text-purple-700 font-semibold"
               >
                 Sign Up
               </button>
