@@ -82,7 +82,7 @@ import { resendVerification } from "../../services/authService";
 import toast from "react-hot-toast";
 import { Mail, RefreshCw, CheckCircle } from "lucide-react";
 
-const VerifyEmail = () => {
+const EmailVerification = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -185,4 +185,4 @@ const VerifyEmail = () => {
   );
 };
 
-export default VerifyEmail;
+export default EmailVerification;

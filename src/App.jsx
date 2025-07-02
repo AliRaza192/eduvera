@@ -12,10 +12,11 @@ import ResetPassword from "./components/auth/ResetPassword";
 import OTPVerification from "./components/auth/OTPVerification";
 import AuthProvider from "./context/AuthContext";
 import EmailVerified from "./pages/Auth/EmailVerified";
-import VerifyEmail from "./pages/Auth/VerifyEmail";
+import VerifyEmail from "./pages/Auth/EmailVerification";
 import EmailVerificationHandler from "./components/auth/EmailVerificationHandler"; // Add this import
 import useAuth from "./hooks/useAuth";
 import { Toaster } from "react-hot-toast";
+import EmailVerification from "./pages/Auth/EmailVerification";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -53,9 +54,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/email-verified" element={<EmailVerified />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/verify/:token" element={<EmailVerificationHandler />} /> {/* Add this route */}
-
+            <Route path="/verification" element={<EmailVerification />} />
+            <Route path="/verify-email/:token" element={<EmailVerificationHandler />} /> {/* Add this route */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/otp-verification" element={<OTPVerification />} />
