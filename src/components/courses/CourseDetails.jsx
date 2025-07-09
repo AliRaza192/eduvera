@@ -605,14 +605,252 @@
 
 // export default CourseDetail;
 
+// import { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import { getCourseDetail } from "../../services/courseService";
+
+// const CourseDetails = () => {
+//   const { categorySlug, courseSlug } = useParams();
+//   const [course, setCourse] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const fetchDetails = async () => {
+//       try {
+//         const res = await getCourseDetail(courseSlug);
+//         console.log("Course Detail API Response:", res.data);
+//         setCourse(res.data.data);
+//       } catch (err) {
+//         console.error("Failed to fetch course detail:", err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchDetails();
+//   }, [courseSlug]);
+
+//   if (loading) return <p className="text-center mt-20">Loading...</p>;
+//   if (!course)
+//     return <p className="text-center text-red-600 mt-20">Course not found!</p>;
+
+//   return (
+//     <div className="max-w-5xl mx-auto px-4 py-10">
+//       <h1 className="text-4xl font-bold mb-4">{course.title}</h1>
+//       <p className="text-lg mb-6">{course.description}</p>
+//       <p className="mb-4">Duration: {course.duration}</p>
+//       {course.price && (
+//         <p className="mb-4 text-purple-700 font-semibold">
+//           Price: ${course.price}
+//         </p>
+//       )}
+//       <button className="bg-purple-700 text-white px-6 py-2 rounded hover:bg-purple-800">
+//         Enroll Now
+//       </button>
+//     </div>
+//   );
+// };
+
+// export default CourseDetails;
+
+// import { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import { getCourseDetail } from "../../services/courseService";
+
+// const CourseDetails = () => {
+//   const { categorySlug, courseSlug } = useParams();
+//   const [course, setCourse] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const fetchDetails = async () => {
+//       try {
+//         const res = await getCourseDetail(courseSlug);
+//         console.log("Course Detail API Response:", res.data);
+//         setCourse(res.data.data);
+//       } catch (err) {
+//         console.error("Failed to fetch course detail:", err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchDetails();
+//   }, [courseSlug]);
+
+//   if (loading) return <p className="text-center mt-20">Loading...</p>;
+//   if (!course)
+//     return <p className="text-center text-red-600 mt-20">Course not found!</p>;
+
+//   return (
+//     <div className="min-h-screen bg-gray-50">
+//       <div className="max-w-7xl mx-auto px-4 py-8">
+//         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+//           {/* Main Content */}
+//           <div className="lg:col-span-2">
+//             {/* Course Thumbnail */}
+//             <div className="mb-8">
+//               <img
+//                 src={course.thumbnail}
+//                 alt={course.title}
+//                 className="w-full h-64 md:h-80 object-cover rounded-lg shadow-lg"
+//               />
+//             </div>
+
+//             {/* Course Title & Description */}
+//             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+//               <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+//                 {course.title}
+//               </h1>
+//               <p className="text-gray-600 leading-relaxed text-lg">
+//                 {course.description}
+//               </p>
+//             </div>
+
+//             {/* Demo Video Section */}
+//             {course.demo_video_url && (
+//               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+//                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+//                   Course Preview
+//                 </h2>
+//                 <div className="aspect-video">
+//                   <video
+//                     controls
+//                     className="w-full h-full rounded-lg"
+//                     poster={course.thumbnail}
+//                   >
+//                     <source src={course.demo_video_url} type="video/mp4" />
+//                     Your browser does not support the video tag.
+//                   </video>
+//                 </div>
+//               </div>
+//             )}
+
+//             {/* Course Content/Classes */}
+//             <div className="bg-white rounded-lg shadow-md p-6">
+//               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+//                 Course Content
+//               </h2>
+//               {course.classes && course.classes.length > 0 ? (
+//                 <div className="space-y-3">
+//                   {course.classes.map((classItem, index) => (
+//                     <div
+//                       key={index}
+//                       className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+//                     >
+//                       <div className="flex items-center">
+//                         <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium mr-3">
+//                           {index + 1}
+//                         </span>
+//                         <span className="text-gray-700">{classItem.title}</span>
+//                       </div>
+//                       <span className="text-gray-500 text-sm">
+//                         {classItem.duration}
+//                       </span>
+//                     </div>
+//                   ))}
+//                 </div>
+//               ) : (
+//                 <div className="text-center py-8 text-gray-500">
+//                   <svg
+//                     className="mx-auto h-12 w-12 text-gray-400 mb-4"
+//                     fill="none"
+//                     viewBox="0 0 24 24"
+//                     stroke="currentColor"
+//                   >
+//                     <path
+//                       strokeLinecap="round"
+//                       strokeLinejoin="round"
+//                       strokeWidth={2}
+//                       d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+//                     />
+//                   </svg>
+//                   <p>Course content will be available soon</p>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+
+//           {/* Sidebar */}
+//           <div className="lg:col-span-1">
+//             <div className="sticky top-8">
+//               {/* Course Info Card */}
+//               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+//                 <div className="text-center mb-6">
+//                   <div className="text-3xl font-bold text-purple-700 mb-2">
+//                     ${course.price}
+//                   </div>
+//                   <p className="text-gray-600">One-time payment</p>
+//                 </div>
+
+//                 <div className="space-y-4 mb-6">
+//                   <div className="flex items-center justify-between py-2 border-b border-gray-100">
+//                     <span className="text-gray-600">Duration</span>
+//                     <span className="font-semibold text-gray-800">
+//                       {course.duration}
+//                     </span>
+//                   </div>
+//                   <div className="flex items-center justify-between py-2 border-b border-gray-100">
+//                     <span className="text-gray-600">Classes</span>
+//                     <span className="font-semibold text-gray-800">
+//                       {course.classes ? course.classes.length : 0} Lessons
+//                     </span>
+//                   </div>
+//                   <div className="flex items-center justify-between py-2 border-b border-gray-100">
+//                     <span className="text-gray-600">Access</span>
+//                     <span className="font-semibold text-gray-800">Lifetime</span>
+//                   </div>
+//                 </div>
+
+//                 <button className="w-full bg-purple-700 text-white py-3 px-6 rounded-lg font-semibold hover:bg-purple-800 transition-colors duration-200 shadow-md">
+//                   Enroll Now
+//                 </button>
+//               </div>
+
+//               {/* Instructor Card */}
+//               {course.teachers && course.teachers.length > 0 && (
+//                 <div className="bg-white rounded-lg shadow-md p-6">
+//                   <h3 className="text-xl font-semibold text-gray-800 mb-4">
+//                     Instructor
+//                   </h3>
+//                   {course.teachers.map((teacher, index) => (
+//                     <div key={index} className="flex items-center">
+//                       <img
+//                         src={teacher.profile_picture}
+//                         alt={teacher.name}
+//                         className="w-16 h-16 rounded-full object-cover mr-4"
+//                       />
+//                       <div>
+//                         <h4 className="font-semibold text-gray-800">
+//                           {teacher.name}
+//                         </h4>
+//                         <p className="text-gray-600 text-sm">Course Instructor</p>
+//                       </div>
+//                     </div>
+//                   ))}
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default CourseDetails;
+
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getCourseDetail } from "../../services/courseService";
+import useAuth from "../../hooks/useAuth";
 
 const CourseDetails = () => {
   const { categorySlug, courseSlug } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const { user } = useAuth(); // 🔐 Check login
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -629,23 +867,176 @@ const CourseDetails = () => {
     fetchDetails();
   }, [courseSlug]);
 
+  const handleEnroll = () => {
+    if (!user) {
+      navigate("/login", {
+        state: {
+          from: location.pathname,
+          redirectAfterLogin: `/courses/${categorySlug}/${courseSlug}/checkout`,
+        },
+      });
+    } else {
+      navigate(`/courses/${categorySlug}/${courseSlug}/checkout`);
+    }
+  };
+
   if (loading) return <p className="text-center mt-20">Loading...</p>;
   if (!course)
     return <p className="text-center text-red-600 mt-20">Course not found!</p>;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <h1 className="text-4xl font-bold mb-4">{course.title}</h1>
-      <p className="text-lg mb-6">{course.description}</p>
-      <p className="mb-4">Duration: {course.duration}</p>
-      {course.price && (
-        <p className="mb-4 text-purple-700 font-semibold">
-          Price: ${course.price}
-        </p>
-      )}
-      <button className="bg-purple-700 text-white px-6 py-2 rounded hover:bg-purple-800">
-        Enroll Now
-      </button>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            <div className="mb-8">
+              <img
+                src={course.thumbnail}
+                alt={course.title}
+                className="w-full h-64 md:h-80 object-cover rounded-lg shadow-lg"
+              />
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                {course.title}
+              </h1>
+              <p className="text-gray-600 leading-relaxed text-lg">
+                {course.description}
+              </p>
+            </div>
+
+            {course.demo_video_url && (
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                  Course Preview
+                </h2>
+                <div className="aspect-video">
+                  <video
+                    controls
+                    className="w-full h-full rounded-lg"
+                    poster={course.thumbnail}
+                  >
+                    <source src={course.demo_video_url} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                Course Content
+              </h2>
+              {course.classes && course.classes.length > 0 ? (
+                <div className="space-y-3">
+                  {course.classes.map((classItem, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                    >
+                      <div className="flex items-center">
+                        <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium mr-3">
+                          {index + 1}
+                        </span>
+                        <span className="text-gray-700">{classItem.title}</span>
+                      </div>
+                      <span className="text-gray-500 text-sm">
+                        {classItem.duration}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400 mb-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  <p>Course content will be available soon</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-8">
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div className="text-center mb-6">
+                  <div className="text-3xl font-bold text-purple-700 mb-2">
+                    ${course.price}
+                  </div>
+                  <p className="text-gray-600">One-time payment</p>
+                </div>
+
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Duration</span>
+                    <span className="font-semibold text-gray-800">
+                      {course.duration}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Classes</span>
+                    <span className="font-semibold text-gray-800">
+                      {course.classes ? course.classes.length : 0} Lessons
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Access</span>
+                    <span className="font-semibold text-gray-800">
+                      Lifetime
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleEnroll}
+                  className="w-full bg-purple-700 text-white py-3 px-6 rounded-lg font-semibold hover:bg-purple-800 transition-colors duration-200 shadow-md"
+                >
+                  Enroll Now
+                </button>
+              </div>
+
+              {course.teachers && course.teachers.length > 0 && (
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                    Instructor
+                  </h3>
+                  {course.teachers.map((teacher, index) => (
+                    <div key={index} className="flex items-center mb-4">
+                      <img
+                        src={teacher.profile_picture}
+                        alt={teacher.name}
+                        className="w-16 h-16 rounded-full object-cover mr-4"
+                      />
+                      <div>
+                        <h4 className="font-semibold text-gray-800">
+                          {teacher.name}
+                        </h4>
+                        <p className="text-gray-600 text-sm">
+                          Course Instructor
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

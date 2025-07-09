@@ -21,8 +21,8 @@ const Home = () => {
       <WhyChooseUs />
       <GetStarted />
       <OurTeachers />
-      <Pricing />
-      <Testimonials />
+      {/* <Pricing /> */}
+      {/* <Testimonials /> */}
       <FAQs />
     </>
   );

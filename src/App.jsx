@@ -105,6 +105,9 @@ import VerifyEmail from "./pages/Auth/EmailVerification";
 import EmailVerificationHandler from "./components/auth/EmailVerificationHandler";
 import useAuth from "./hooks/useAuth";
 import { Toaster } from "react-hot-toast";
+import Checkout from "./components/courses/Checkout";
+import Success from "./pages/payment/Success";
+import Cancel from "./pages/payment/Cancel";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -131,15 +134,31 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<CourseList />} />
-            <Route path="/courses/:categorySlug" element={<CategoryCourses />} />
-            <Route path="/courses/:categorySlug/:courseSlug" element={<CourseDetails />} />
+            <Route
+              path="/courses/:categorySlug"
+              element={<CategoryCourses />}
+            />
+            <Route
+              path="/courses/:categorySlug/:courseSlug"
+              element={<CourseDetails />}
+            />
+            <Route
+              path="/courses/:categorySlug/:courseSlug/checkout"
+              element={<Checkout />}
+            />
+            <Route path="/payment-success" element={<Success />} />
+            <Route path="/payment-cancel" element={<Cancel />} />
+
             <Route path="/about" element={<AboutUs />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/email-verified" element={<EmailVerified />} />
             <Route path="/verification" element={<VerifyEmail />} />
-            <Route path="/verify-email" element={<EmailVerificationHandler />} />
+            <Route
+              path="/verify-email"
+              element={<EmailVerificationHandler />}
+            />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/otp-verification" element={<OTPVerification />} />
