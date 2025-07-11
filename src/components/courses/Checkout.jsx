@@ -5,7 +5,8 @@ import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 
 const Checkout = () => {
-  const { courseSlug } = useParams();
+  // Fix: Get both categorySlug and courseSlug from params
+  const { categorySlug, courseSlug } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
@@ -32,6 +33,11 @@ const Checkout = () => {
       try {
         setLoading(true);
         setError(null);
+        
+        // Debug logs
+        console.log("Category Slug:", categorySlug);
+        console.log("Course Slug:", courseSlug);
+        
         const res = await getCourseDetail(courseSlug);
         console.log("Course details from checkout:", res.data);
 
@@ -56,47 +62,7 @@ const Checkout = () => {
     if (courseSlug && user) {
       fetchCourse();
     }
-  }, [courseSlug, user]);
-
-  // const handleCheckout = async () => {
-  //   if (!course || !user) return;
-
-  //   try {
-  //     setProcessing(true);
-  //     console.log("Sending checkout request with:", {
-  //       course_slug: course.slug,
-  //     });
-
-  //     const res = await checkoutCourse({ course_slug: course.slug });
-  //     console.log("Checkout response:", res.data);
-
-  //     if (res.data?.status === true) {
-  //       if (res.data?.data?.url) {
-  //         // ✅ Redirect to Stripe Checkout
-  //         window.location.href = res.data.data.url;
-  //       } else if (res.data?.message) {
-  //         // ✅ Show success message if no URL (might be free course)
-  //         toast.success(res.data.message);
-  //         navigate('/my-courses');
-  //       }
-  //     } else {
-  //       toast.error(res.data?.message || "Payment failed.");
-  //     }
-  //   } catch (err) {
-  //     console.error("Checkout error:", err);
-  //     const errorMessage = err.response?.data?.message || "Checkout failed.";
-  //     toast.error(errorMessage);
-
-  //     // Handle specific error cases
-  //     if (err.response?.status === 401) {
-  //       navigate('/login');
-  //     } else if (err.response?.status === 404) {
-  //       toast.error("Course not found or checkout not available.");
-  //     }
-  //   } finally {
-  //     setProcessing(false);
-  //   }
-  // };
+  }, [courseSlug, user, categorySlug]);
 
   const handleCheckout = async () => {
     if (!course || !user) return;
@@ -104,86 +70,79 @@ const Checkout = () => {
     try {
       setProcessing(true);
 
-      // Debug logs
       console.log("Course data:", course);
       console.log("Course slug:", course.slug);
       console.log("Course ID:", course.id);
+      console.log("Category slug:", categorySlug);
 
-      if (!course.slug) {
-        toast.error("Course slug is missing");
+      if (!course.slug && !course.id) {
+        toast.error("Course information is missing");
         return;
       }
 
-      // Method 1: Try with course_slug
-      let checkoutData = {
+      // Try different payload formats based on API expectations
+      const checkoutData = {
         course_slug: course.slug,
+        course_id: course.id,
+        ...(categorySlug && { category_slug: categorySlug })
       };
 
       console.log("Sending checkout request with:", checkoutData);
 
-      try {
-        const res = await checkoutCourse(checkoutData);
-        console.log("Checkout response:", res.data);
+      const res = await checkoutCourse(checkoutData);
+      console.log("Checkout response:", res.data);
 
-        if (res.data?.status === true) {
-          if (res.data?.data?.url) {
-            window.location.href = res.data.data.url;
-          } else if (res.data?.message) {
-            toast.success(res.data.message);
-            navigate("/my-courses");
-          }
+      // FIXED: Check for URL directly instead of status field
+      if (res.data?.url) {
+        // Redirect to Stripe Checkout
+        toast.success("Redirecting to payment...");
+        setTimeout(() => {
+          window.location.href = res.data.url;
+        }, 1000);
+      } else if (res.data?.id && !res.data?.url) {
+        // If only session ID is present but no URL
+        toast.error("Payment URL not found. Please contact support.");
+      } else if (res.data?.status === true) {
+        // Handle success cases without URL (like free courses)
+        if (res.data?.message) {
+          toast.success(res.data.message);
+          navigate('/my-courses');
         } else {
-          toast.error(res.data?.message || "Payment failed.");
+          toast.success("Successfully enrolled!");
+          navigate('/my-courses');
         }
-      } catch (firstError) {
-        console.log("First method failed, trying alternative...");
-
-        // Method 2: Try with course ID
-        try {
-          const altData = { course_id: course.id };
-          const res = await checkoutCourse(altData);
-
-          if (res.data?.status === true) {
-            if (res.data?.data?.url) {
-              window.location.href = res.data.data.url;
-            } else {
-              toast.success(res.data.message);
-              navigate("/my-courses");
-            }
-          }
-        } catch (secondError) {
-          console.log("Second method failed, trying third...");
-
-          // Method 3: Try with slug in URL
-          try {
-            const res = await checkoutCourseAlternative(course.slug);
-
-            if (res.data?.status === true) {
-              if (res.data?.data?.url) {
-                window.location.href = res.data.data.url;
-              } else {
-                toast.success(res.data.message);
-                navigate("/my-courses");
-              }
-            }
-          } catch (thirdError) {
-            throw thirdError; // Final error
-          }
-        }
+      } else {
+        // Handle other error cases
+        toast.error(res.data?.message || "Payment initialization failed.");
       }
     } catch (err) {
-      console.error("All checkout methods failed:", err);
-      console.error("Error response:", err.response);
+      console.error("Checkout error:", err);
+      console.error("Error response:", err.response?.data);
       console.error("Error status:", err.response?.status);
-      console.error("Error data:", err.response?.data);
-
-      const errorMessage = err.response?.data?.message || "Checkout failed.";
+      
+      let errorMessage = "Checkout failed.";
+      
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.response?.data?.errors) {
+        // Handle validation errors
+        const errors = err.response.data.errors;
+        if (typeof errors === 'object') {
+          errorMessage = Object.values(errors).flat().join(', ');
+        } else {
+          errorMessage = errors;
+        }
+      }
+      
       toast.error(errorMessage);
 
+      // Handle specific error cases
       if (err.response?.status === 401) {
-        navigate("/login");
+        navigate('/login');
       } else if (err.response?.status === 404) {
         toast.error("Course not found or checkout not available.");
+      } else if (err.response?.status === 422) {
+        toast.error("Invalid checkout data. Please check course details.");
       }
     } finally {
       setProcessing(false);
@@ -209,12 +168,20 @@ const Checkout = () => {
         <div className="text-center">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
           <p className="text-xl font-semibold text-red-600 mb-4">{error}</p>
-          <button
-            onClick={() => navigate("/courses")}
-            className="bg-purple-700 text-white px-6 py-2 rounded-lg hover:bg-purple-800 transition-colors"
-          >
-            Browse Courses
-          </button>
+          <div className="space-y-2">
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-purple-700 text-white px-6 py-2 rounded-lg hover:bg-purple-800 transition-colors mr-2"
+            >
+              Try Again
+            </button>
+            <button
+              onClick={() => navigate("/courses")}
+              className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+            >
+              Browse Courses
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -242,6 +209,48 @@ const Checkout = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-10">
+        {/* Breadcrumb */}
+        <nav className="mb-8" aria-label="Breadcrumb">
+          <ol className="inline-flex items-center space-x-1 md:space-x-3">
+            <li className="inline-flex items-center">
+              <button
+                onClick={() => navigate('/courses')}
+                className="text-purple-600 hover:text-purple-800"
+              >
+                Courses
+              </button>
+            </li>
+            <li>
+              <div className="flex items-center">
+                <span className="mx-2 text-gray-400">/</span>
+                <button
+                  onClick={() => navigate(`/courses/${categorySlug}`)}
+                  className="text-purple-600 hover:text-purple-800"
+                >
+                  {categorySlug}
+                </button>
+              </div>
+            </li>
+            <li>
+              <div className="flex items-center">
+                <span className="mx-2 text-gray-400">/</span>
+                <button
+                  onClick={() => navigate(`/courses/${categorySlug}/${courseSlug}`)}
+                  className="text-purple-600 hover:text-purple-800"
+                >
+                  {course.title}
+                </button>
+              </div>
+            </li>
+            <li aria-current="page">
+              <div className="flex items-center">
+                <span className="mx-2 text-gray-400">/</span>
+                <span className="text-gray-500">Checkout</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Checkout</h1>
           <p className="text-gray-600 mt-2">
@@ -285,6 +294,18 @@ const Checkout = () => {
                       {course.classes ? course.classes.length : 0}
                     </p>
                   </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm text-gray-500">Level</p>
+                    <p className="font-semibold">
+                      {course.level || "All Levels"}
+                    </p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm text-gray-500">Language</p>
+                    <p className="font-semibold">
+                      {course.language || "English"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -302,11 +323,15 @@ const Checkout = () => {
                       ${course.price || "Free"}
                     </span>
                   </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Tax</span>
+                    <span className="text-gray-600">$0.00</span>
+                  </div>
                   <div className="border-t pt-4">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-semibold">Total</span>
                       <span className="text-2xl font-bold text-purple-700">
-                        ${course.price || "Free"}
+                        ${course.price || "0.00"}
                       </span>
                     </div>
                   </div>
@@ -323,7 +348,7 @@ const Checkout = () => {
                           Processing...
                         </div>
                       ) : (
-                        `Pay ${course.price || "0"} & Enroll`
+                        `${course.price && parseFloat(course.price) > 0 ? `Pay $${course.price}` : 'Enroll for Free'} & Start Learning`
                       )}
                     </button>
                   </div>
@@ -346,6 +371,8 @@ const Checkout = () => {
                   <li>✅ All course materials and resources</li>
                   <li>✅ Certificate of completion</li>
                   <li>✅ Student support and community access</li>
+                  <li>✅ Mobile and desktop access</li>
+                  <li>✅ 30-day money-back guarantee</li>
                 </ul>
               </div>
             </div>
