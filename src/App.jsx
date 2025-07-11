@@ -255,8 +255,8 @@ function App() {
               path="/courses/:categorySlug/:courseSlug/checkout"
               element={<Checkout />}
             />
-            <Route path="/payment-success" element={<Success />} />
-            <Route path="/payment-cancel" element={<Cancel />} />
+            <Route path="/success" element={<Success />} />
+            <Route path="/cancel" element={<Cancel />} />
 
             <Route path="/about" element={<AboutUs />} />
             <Route path="/contact" element={<Contact />} />
