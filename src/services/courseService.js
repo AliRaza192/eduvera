@@ -11,9 +11,11 @@ export const getCoursesByCategory = (slug, params) =>
 export const getAllCourses = (params) =>
   instance.post("courses", null, { params });
 
-export const getCourseDetail = (slug) => instance.post(`courses/${slug}`);
+export const getCourseDetail = (slug) => instance.post(`course-detail/${slug}`);
 
-export const checkoutCourse = (data) => instance.post("courses/checkout", data);
+export const checkoutCourse = (data) =>
+  instance.post("buy-course/checkout", data);
+
 
 export const getMyCourses = () => instance.post("my-courses");
 

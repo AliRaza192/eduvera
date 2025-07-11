@@ -847,24 +847,36 @@ const CourseDetails = () => {
   const { categorySlug, courseSlug } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const { user } = useAuth(); // 🔐 Check login
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const res = await getCourseDetail(courseSlug);
         console.log("Course Detail API Response:", res.data);
-        setCourse(res.data.data);
+        
+        if (res.data?.status === true && res.data?.data) {
+          setCourse(res.data.data);
+        } else {
+          setError(res.data?.message || "Failed to load course details");
+        }
       } catch (err) {
         console.error("Failed to fetch course detail:", err);
+        setError(err.response?.data?.message || "Failed to load course details");
       } finally {
         setLoading(false);
       }
     };
-    fetchDetails();
+    
+    if (courseSlug) {
+      fetchDetails();
+    }
   }, [courseSlug]);
 
   const handleEnroll = () => {
@@ -880,9 +892,50 @@ const CourseDetails = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-20">Loading...</p>;
-  if (!course)
-    return <p className="text-center text-red-600 mt-20">Course not found!</p>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-700 mx-auto mb-4"></div>
+          <p className="text-lg font-semibold text-gray-600">Loading course details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <p className="text-xl font-semibold text-red-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-purple-700 text-white px-6 py-2 rounded-lg hover:bg-purple-800 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-400 text-6xl mb-4">📚</div>
+          <p className="text-xl font-semibold text-gray-600">Course not found!</p>
+          <button
+            onClick={() => navigate('/courses')}
+            className="mt-4 bg-purple-700 text-white px-6 py-2 rounded-lg hover:bg-purple-800 transition-colors"
+          >
+            Browse Courses
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -890,14 +943,19 @@ const CourseDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
+            {/* Course Image */}
             <div className="mb-8">
               <img
-                src={course.thumbnail}
+                src={course.thumbnail || '/placeholder-course.jpg'}
                 alt={course.title}
                 className="w-full h-64 md:h-80 object-cover rounded-lg shadow-lg"
+                onError={(e) => {
+                  e.target.src = '/placeholder-course.jpg';
+                }}
               />
             </div>
 
+            {/* Course Info */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                 {course.title}
@@ -907,6 +965,7 @@ const CourseDetails = () => {
               </p>
             </div>
 
+            {/* Demo Video */}
             {course.demo_video_url && (
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -925,6 +984,7 @@ const CourseDetails = () => {
               </div>
             )}
 
+            {/* Course Content */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                 Course Content
@@ -933,8 +993,8 @@ const CourseDetails = () => {
                 <div className="space-y-3">
                   {course.classes.map((classItem, index) => (
                     <div
-                      key={index}
-                      className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                      key={classItem.id || index}
+                      className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       <div className="flex items-center">
                         <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium mr-3">
@@ -943,7 +1003,7 @@ const CourseDetails = () => {
                         <span className="text-gray-700">{classItem.title}</span>
                       </div>
                       <span className="text-gray-500 text-sm">
-                        {classItem.duration}
+                        {classItem.duration || 'N/A'}
                       </span>
                     </div>
                   ))}
@@ -972,10 +1032,11 @@ const CourseDetails = () => {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-8">
+              {/* Price Card */}
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <div className="text-center mb-6">
                   <div className="text-3xl font-bold text-purple-700 mb-2">
-                    ${course.price}
+                    ${course.price || 'Free'}
                   </div>
                   <p className="text-gray-600">One-time payment</p>
                 </div>
@@ -984,7 +1045,7 @@ const CourseDetails = () => {
                   <div className="flex items-center justify-between py-2 border-b border-gray-100">
                     <span className="text-gray-600">Duration</span>
                     <span className="font-semibold text-gray-800">
-                      {course.duration}
+                      {course.duration || 'Self-paced'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-gray-100">
@@ -1009,24 +1070,28 @@ const CourseDetails = () => {
                 </button>
               </div>
 
+              {/* Instructor Card */}
               {course.teachers && course.teachers.length > 0 && (
                 <div className="bg-white rounded-lg shadow-md p-6">
                   <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                    Instructor
+                    {course.teachers.length > 1 ? 'Instructors' : 'Instructor'}
                   </h3>
                   {course.teachers.map((teacher, index) => (
-                    <div key={index} className="flex items-center mb-4">
+                    <div key={teacher.id || index} className="flex items-center mb-4 last:mb-0">
                       <img
-                        src={teacher.profile_picture}
+                        src={teacher.profile_picture || '/placeholder-avatar.jpg'}
                         alt={teacher.name}
                         className="w-16 h-16 rounded-full object-cover mr-4"
+                        onError={(e) => {
+                          e.target.src = '/placeholder-avatar.jpg';
+                        }}
                       />
                       <div>
                         <h4 className="font-semibold text-gray-800">
                           {teacher.name}
                         </h4>
                         <p className="text-gray-600 text-sm">
-                          Course Instructor
+                          {teacher.title || 'Course Instructor'}
                         </p>
                       </div>
                     </div>
